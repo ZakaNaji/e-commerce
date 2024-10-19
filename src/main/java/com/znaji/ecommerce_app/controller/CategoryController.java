@@ -1,25 +1,28 @@
 package com.znaji.ecommerce_app.controller;
 
 import com.znaji.ecommerce_app.entity.Category;
+import com.znaji.ecommerce_app.service.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
-    private final List<Category> categories = new ArrayList<>();
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/public/categories")
     public List<Category> getCategories() {
-        return categories;
+        return categoryService.findAllCategories();
     }
 
     @PostMapping("/public/categories")
     public Category addCategory(@RequestBody Category category) {
-        categories.add(category);
-        return category;
+        return categoryService.createCategory(category);
     }
 
     //give me json example
