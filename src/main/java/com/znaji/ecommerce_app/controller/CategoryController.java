@@ -2,6 +2,8 @@ package com.znaji.ecommerce_app.controller;
 
 import com.znaji.ecommerce_app.entity.Category;
 import com.znaji.ecommerce_app.service.CategoryService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,13 +18,26 @@ public class CategoryController {
     }
 
     @GetMapping("/public/categories")
+    @ResponseStatus(HttpStatus.OK)
     public List<Category> getCategories() {
         return categoryService.findAllCategories();
     }
 
     @PostMapping("/public/categories")
-    public Category addCategory(@RequestBody Category category) {
-        return categoryService.createCategory(category);
+    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(category));
+    }
+
+    @PutMapping("/public/categories/{categoryId}")
+    public ResponseEntity<Category> updateCategory(@PathVariable Long categoryId, @RequestBody Category category) {
+        category.setCategoryId(categoryId);
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.updateCategory(category));
+    }
+
+    @DeleteMapping("/public/categories/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+        categoryService.deleteCategory(categoryId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     //give me json example
