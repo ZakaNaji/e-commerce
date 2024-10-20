@@ -21,8 +21,9 @@ public class CategoryController {
 
     @GetMapping("/public/categories")
     @ResponseStatus(HttpStatus.OK)
-    public CategoryResponse getCategories() {
-        return categoryService.findAllCategories();
+    public CategoryResponse getCategories(@RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
+                                          @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
+        return categoryService.findAllCategories(pageNumber, pageSize);
     }
 
     @PostMapping("/public/categories")

@@ -6,6 +6,9 @@ import com.znaji.ecommerce_app.entity.Category;
 import com.znaji.ecommerce_app.repository.CategoryRepository;
 import com.znaji.ecommerce_app.service.CategoryService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,8 +33,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponse findAllCategories() {
-        List<CategoryDTO> categoryDTOS = categoryRepository.findAll().stream()
+    public CategoryResponse findAllCategories(int pageNumber, int pageSize) {
+        Page<Category> categories = categoryRepository.findAll(PageRequest.of(pageNumber, pageSize));
+        List<CategoryDTO> categoryDTOS = categories.stream()
                 .map(c -> modelMapper.map(c, CategoryDTO.class))
                 .toList();
         return new CategoryResponse(categoryDTOS);
