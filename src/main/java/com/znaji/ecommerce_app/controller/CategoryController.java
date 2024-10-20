@@ -1,5 +1,6 @@
 package com.znaji.ecommerce_app.controller;
 
+import com.znaji.ecommerce_app.dto.CategoryResponse;
 import com.znaji.ecommerce_app.entity.Category;
 import com.znaji.ecommerce_app.service.CategoryService;
 import jakarta.validation.Valid;
@@ -20,7 +21,7 @@ public class CategoryController {
 
     @GetMapping("/public/categories")
     @ResponseStatus(HttpStatus.OK)
-    public List<Category> getCategories() {
+    public CategoryResponse getCategories() {
         return categoryService.findAllCategories();
     }
 
