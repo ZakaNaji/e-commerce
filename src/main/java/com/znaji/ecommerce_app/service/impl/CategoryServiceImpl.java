@@ -20,6 +20,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category createCategory(Category category) {
+        checkCategoryName(category.getCategoryName());
         return categoryRepository.save(category);
     }
 
@@ -32,6 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category updateCategory(Category category) {
         Category dbCat = categoryRepository.findById(category.getCategoryId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+        checkCategoryName(category.getCategoryName());
         dbCat.setCategoryName(category.getCategoryName());
         return categoryRepository.save(dbCat);
     }
@@ -41,5 +43,11 @@ public class CategoryServiceImpl implements CategoryService {
         Category dbCat = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
         categoryRepository.delete(dbCat);
+    }
+
+    private void checkCategoryName(String categoryName) {
+        if (categoryRepository.findByCategoryName(categoryName).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category already exists");
+        }
     }
 }
