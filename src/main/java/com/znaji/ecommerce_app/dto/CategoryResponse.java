@@ -12,9 +12,14 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class CategoryResponse {
-    List<CategoryDTO> content;
+    private List<CategoryDTO> content;
+    private int pageNumber;
+    private int pageSize;
+    private int totalPages;
+    private long totalElements;
+    private boolean lastPage;
 
-    public void addCategory(CategoryDTO category) {
-        content.add(category);
+    public CategoryResponse(List<CategoryDTO> content) {
+        this.content = content;
     }
 }
