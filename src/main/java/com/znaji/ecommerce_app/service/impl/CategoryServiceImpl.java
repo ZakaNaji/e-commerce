@@ -63,6 +63,12 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.delete(dbCat);
     }
 
+    @Override
+    public Category findCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+    }
+
     private void checkCategoryName(String categoryName) {
         if (categoryRepository.findByCategoryName(categoryName).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category already exists");
