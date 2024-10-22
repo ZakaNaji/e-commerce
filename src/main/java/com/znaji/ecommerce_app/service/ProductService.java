@@ -50,5 +50,10 @@ public class ProductService {
 
     public ProductResponse getProductsByCategory(Long categoryId) {
         final Category category = categoryService.findCategoryById(categoryId);
+        final List<Product> products = category.getProducts();
+        final List<ProductDTO> productDTOS = products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .toList();
+        return new ProductResponse(productDTOS);
     }
 }
