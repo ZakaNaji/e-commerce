@@ -1,6 +1,7 @@
 package com.znaji.ecommerce_app.service;
 
 import com.znaji.ecommerce_app.dto.ProductDTO;
+import com.znaji.ecommerce_app.dto.ProductResponse;
 import com.znaji.ecommerce_app.entity.Category;
 import com.znaji.ecommerce_app.entity.Product;
 import com.znaji.ecommerce_app.repository.ProductRepository;
@@ -8,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -35,5 +38,17 @@ public class ProductService {
 
     private static double getSpecialPrice(Product product) {
         return product.getPrice() - (product.getPrice() * product.getDiscount() / 100);
+    }
+
+    public ProductResponse getAllProducts() {
+        final List<Product> products = productRepository.findAll();
+        final List<ProductDTO> productDTOS = products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .toList();
+        return new ProductResponse(productDTOS);
+    }
+
+    public ProductResponse getProductsByCategory(Long categoryId) {
+        final Category category = categoryService.findCategoryById(categoryId);
     }
 }

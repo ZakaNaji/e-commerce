@@ -16,15 +16,15 @@ public class ProductDTO {
     private int quantity;
     private double price;
     private double discount;
-    /*give me a json object with the following structure:
+    /*give me a json example of this class(Phone):
     {
         "productId": 1,
-        "productName": "product name",
-        "description": "product description",
-        "image": "product image",
-        "quantity": 1,
-        "price": 1.0,
-        "discount": 1.0
+        "productName": "Samsung Galaxy S21",
+        "description": "Samsung Galaxy S21 5G",
+        "image": "samsung-galaxy-s21.jpg",
+        "quantity": 100,
+        "price": 999.99,
+        "discount": 10
     }
     */
 }
