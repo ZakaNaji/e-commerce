@@ -42,15 +42,16 @@ public class ProductService {
 
     public ProductResponse getAllProducts() {
         final List<Product> products = productRepository.findAll();
-        final List<ProductDTO> productDTOS = products.stream()
-                .map(product -> modelMapper.map(product, ProductDTO.class))
-                .toList();
-        return new ProductResponse(productDTOS);
+        return getProductResponse(products);
     }
 
     public ProductResponse getProductsByCategory(Long categoryId) {
         final Category category = categoryService.findCategoryById(categoryId);
-        final List<Product> products = category.getProducts();
+
+        return getProductResponse(productRepository.findByCategoryCategoryId(category.getCategoryId()));
+    }
+
+    private ProductResponse getProductResponse(List<Product> products) {
         final List<ProductDTO> productDTOS = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
