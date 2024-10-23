@@ -45,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
 
         final Product product = modelMapper.map(productDTO, Product.class);
         product.setCategory(category);
+        product.setProductId(null);
         final Product savedProduct = productRepository.save(product);
         return modelMapper.map(savedProduct, ProductDTO.class);
 
