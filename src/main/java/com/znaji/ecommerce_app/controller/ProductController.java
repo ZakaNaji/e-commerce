@@ -32,4 +32,15 @@ public class ProductController {
     public ResponseEntity<ProductResponse> getProductsByCategory(@PathVariable Long categoryId) {
         return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
     }
+
+    @GetMapping("/public/products/keyword/{keyword}")
+    public ResponseEntity<ProductResponse> getProductsByKeyword(@PathVariable String keyword) {
+        return ResponseEntity.ok(productService.getProductsByKeyword(keyword));
+    }
+
+    @PutMapping("/admin/products/{productId}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long productId,
+                                                    @RequestBody ProductDTO productDTO) {
+        return ResponseEntity.ok(productService.updateProduct(productId, productDTO));
+    }
 }

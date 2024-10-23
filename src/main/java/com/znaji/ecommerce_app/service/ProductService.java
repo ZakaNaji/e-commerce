@@ -25,6 +25,13 @@ public class ProductService {
         this.modelMapper = modelMapper;
     }
 
+    private ProductResponse getProductResponse(List<Product> products) {
+        final List<ProductDTO> productDTOS = products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .toList();
+        return new ProductResponse(productDTOS);
+    }
+
     public ProductDTO addProduct(Long categoryId, ProductDTO productDTO) {
         Category category = categoryService.findCategoryById(categoryId);
 
@@ -51,10 +58,18 @@ public class ProductService {
         return getProductResponse(productRepository.findByCategoryCategoryId(category.getCategoryId()));
     }
 
-    private ProductResponse getProductResponse(List<Product> products) {
-        final List<ProductDTO> productDTOS = products.stream()
-                .map(product -> modelMapper.map(product, ProductDTO.class))
-                .toList();
-        return new ProductResponse(productDTOS);
+    public ProductResponse getProductsByKeyword(String keyword) {
+        final List<Product> products = productRepository.findByProductNameLikeIgnoreCase("%" + keyword + "%");
+        return getProductResponse(products);
+    }
+
+    public ProductDTO updateProduct(Long productId, ProductDTO productDTO) {
+        final Product productDB = productRepository.findById(productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+        final Product product = modelMapper.map(productDTO, Product.class);
+        product.setProductId(productId);
+        product.setCategory(productDB.getCategory());
+        final Product savedProduct = productRepository.save(product);
+        return modelMapper.map(savedProduct, ProductDTO.class);
     }
 }
