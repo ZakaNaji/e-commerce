@@ -9,6 +9,9 @@ import com.znaji.ecommerce_app.service.CategoryService;
 import com.znaji.ecommerce_app.service.FileService;
 import com.znaji.ecommerce_app.service.ProductService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,11 +35,17 @@ public class ProductServiceImpl implements ProductService {
         this.modelMapper = modelMapper;
     }
 
-    private ProductResponse getProductResponse(List<Product> products) {
-        final List<ProductDTO> productDTOS = products.stream()
+    private ProductResponse getProductResponse(Page<Product> productPage) {
+        final List<ProductDTO> productDTOS = productPage.getContent().stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
-        return new ProductResponse(productDTOS);
+        ProductResponse productResponse = new ProductResponse(productDTOS);
+        productResponse.setPageNumber(productPage.getNumber());
+        productResponse.setPageSize(productPage.getSize());
+        productResponse.setTotalPages(productPage.getTotalPages());
+        productResponse.setTotalElements(productPage.getTotalElements());
+        productResponse.setLastPage(productPage.isLast());
+        return productResponse;
     }
 
     @Override
@@ -52,21 +61,27 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse getAllProducts() {
-        final List<Product> products = productRepository.findAll();
-        return getProductResponse(products);
+    public ProductResponse getAllProducts(int page, int size, String sortBy) {
+
+        Page<Product> productPage = productRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortBy)));
+
+        return getProductResponse(productPage);
     }
 
     @Override
-    public ProductResponse getProductsByCategory(Long categoryId) {
+    public ProductResponse getProductsByCategory(Long categoryId, int page, int size, String sortBy) {
         final Category category = categoryService.findCategoryById(categoryId);
 
-        return getProductResponse(productRepository.findByCategoryCategoryId(category.getCategoryId()));
+        return getProductResponse(productRepository.findByCategoryCategoryId(
+                category.getCategoryId(),
+                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortBy))
+        ));
     }
 
     @Override
-    public ProductResponse getProductsByKeyword(String keyword) {
-        final List<Product> products = productRepository.findByProductNameLikeIgnoreCase("%" + keyword + "%");
+    public ProductResponse getProductsByKeyword(String keyword, int page, int size, String sortBy) {
+        final Page<Product> products = productRepository.findByProductNameLikeIgnoreCase("%" + keyword + "%",
+                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortBy)));
         return getProductResponse(products);
     }
 
