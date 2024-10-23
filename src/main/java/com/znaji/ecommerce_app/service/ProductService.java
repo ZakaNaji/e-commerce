@@ -72,4 +72,10 @@ public class ProductService {
         final Product savedProduct = productRepository.save(product);
         return modelMapper.map(savedProduct, ProductDTO.class);
     }
+
+    public void deleteProduct(Long productId) {
+        productRepository.findById(productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+        productRepository.deleteById(productId);
+    }
 }
