@@ -6,6 +6,10 @@ import com.znaji.ecommerce_app.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
@@ -42,6 +46,19 @@ public class ProductController {
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long productId,
                                                     @RequestBody ProductDTO productDTO) {
         return ResponseEntity.ok(productService.updateProduct(productId, productDTO));
+    }
+
+    @PutMapping("/admin/products/{productId}/image")
+    public ResponseEntity<ProductDTO> updateProductImage(@PathVariable Long productId,
+                                                         @RequestParam MultipartFile image) throws IOException {
+        if (image.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Image is required");
+        }
+
+        if (!image.getContentType().startsWith("image")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only images are allowed");
+        }
+        return ResponseEntity.ok(productService.updateProductImage(productId, image));
     }
 
     @DeleteMapping("/admin/products/{productId}")

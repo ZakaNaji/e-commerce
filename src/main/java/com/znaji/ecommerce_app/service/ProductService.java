@@ -8,8 +8,15 @@ import com.znaji.ecommerce_app.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Service
@@ -73,5 +80,26 @@ public class ProductService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
         productRepository.deleteById(productId);
         return modelMapper.map(productDb, ProductDTO.class);
+    }
+
+    public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
+        final Product productDb = productRepository.findById(productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
+        final String fileName = uploadImage(image);
+        productDb.setImage(fileName);
+        productRepository.save(productDb);
+        return modelMapper.map(productDb, ProductDTO.class);
+    }
+
+    private static String uploadImage(MultipartFile image) throws IOException {
+        final String fileName = StringUtils.cleanPath(image.getOriginalFilename());
+        final File folder = new File("src/main/resources/static/images");
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        final Path path = Path.of(folder.getPath() +File.separator +  fileName);
+        Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        return fileName;
     }
 }
