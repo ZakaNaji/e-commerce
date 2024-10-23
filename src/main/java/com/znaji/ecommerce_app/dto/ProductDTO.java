@@ -1,5 +1,6 @@
 package com.znaji.ecommerce_app.dto;
 
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,9 @@ import lombok.NoArgsConstructor;
 public class ProductDTO {
 
     private Long productId;
+    @Size(min = 3, max = 100, message = "Product name must be between 3 and 100 characters")
     private String productName;
+    @Size(min = 6, max = 200, message = "Description must be between 6 and 200 characters")
     private String description;
     private String image;
     private int quantity;
