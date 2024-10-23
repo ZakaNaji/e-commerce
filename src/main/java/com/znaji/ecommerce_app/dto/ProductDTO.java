@@ -16,6 +16,7 @@ public class ProductDTO {
     private int quantity;
     private double price;
     private double discount;
+    private double specialPrice;
     /*give me a json example of this class(Phone):
     {
         "productId": 1,

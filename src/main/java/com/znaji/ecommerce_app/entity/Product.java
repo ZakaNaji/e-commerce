@@ -22,6 +22,13 @@ public class Product {
     private double discount;
     private double specialPrice;
 
+
+    @PrePersist
+    @PreUpdate
+    public void calculateSpecialPrice() {
+        this.specialPrice = this.price - (this.price * this.discount / 100);
+    }
+
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "categoryId")
     private Category category;

@@ -37,14 +37,9 @@ public class ProductService {
 
         final Product product = modelMapper.map(productDTO, Product.class);
         product.setCategory(category);
-        product.setSpecialPrice(getSpecialPrice(product));
         final Product savedProduct = productRepository.save(product);
         return modelMapper.map(savedProduct, ProductDTO.class);
 
-    }
-
-    private static double getSpecialPrice(Product product) {
-        return product.getPrice() - (product.getPrice() * product.getDiscount() / 100);
     }
 
     public ProductResponse getAllProducts() {
