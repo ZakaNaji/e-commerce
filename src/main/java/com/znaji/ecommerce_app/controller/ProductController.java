@@ -3,6 +3,7 @@ package com.znaji.ecommerce_app.controller;
 import com.znaji.ecommerce_app.dto.ProductDTO;
 import com.znaji.ecommerce_app.dto.ProductResponse;
 import com.znaji.ecommerce_app.service.ProductService;
+import com.znaji.ecommerce_app.service.impl.ProductServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
