@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -20,5 +22,6 @@ public class Address {
     private String zipCode;
     private String street;
 
-    private User user;
+    @ManyToMany(mappedBy = "addresses")
+    private List<User> user;
 }
