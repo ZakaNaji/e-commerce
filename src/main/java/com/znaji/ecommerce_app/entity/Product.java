@@ -33,6 +33,10 @@ public class Product {
     @JoinColumn(name = "category_id", referencedColumnName = "categoryId")
     private Category category;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private User seller;
+
     /*give me sql script for this entity
     CREATE TABLE product (
         product_id BIGINT PRIMARY KEY AUTO_INCREMENT,

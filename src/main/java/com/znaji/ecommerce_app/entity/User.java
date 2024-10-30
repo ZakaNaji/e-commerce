@@ -1,10 +1,13 @@
 package com.znaji.ecommerce_app.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -20,9 +23,12 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
     @Column(name = "username")
+    @NotBlank
     private String username;
     private String password;
     @Column(name = "email")
+    @NotBlank
+    @Email
     private String email;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -31,7 +37,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    List<Role> roles;
+    Set<Role> roles;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
@@ -39,5 +45,10 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id")
     )
-    List<Address> addresses;
+    Set<Address> addresses;
+
+    @OneToMany(mappedBy = "seller",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            orphanRemoval = true)
+    Set<Product> products;
 }
