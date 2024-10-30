@@ -45,7 +45,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id")
     )
-    Set<Address> addresses;
+    List<Address> addresses;
 
     @OneToMany(mappedBy = "seller",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
