@@ -74,3 +74,14 @@ INSERT INTO product ( product_name, description, image, quantity, price, discoun
 INSERT INTO product ( product_name, description, image, quantity, price, discount, special_price, category_id) VALUES ('Xiaomi Mi 9', 'Xiaomi Mi 9', 'https://www.example.com/xiaomi-mi-9.jpg', 100, 500.0, 0.0, 500.0, 2);
 INSERT INTO product ( product_name, description, image, quantity, price, discount, special_price, category_id) VALUES ('Xiaomi Mi 9 Pro', 'Xiaomi Mi 9 Pro', 'https://www.example.com/xiaomi-mi-9-pro.jpg', 100, 600.0, 0.0, 600.0, 2);
 INSERT INTO product ( product_name, description, image, quantity, price, discount, special_price, category_id) VALUES ('Xiaomi Mi 9 SE', 'Xiaomi Mi 9 SE', 'https://www.example.com/xiaomi-mi-9-se.jpg', 100, 400.0, 0.0, 400.0, 2);
+
+/* 3 users and there roles */
+insert into users (username, password, email) values ('admin', '$2a$12$woyVf3GRn1wzUJUqbY9Z2uXR5vZWNBHdndRNR4WFUesHZ0TR9zvrS', 'admin@gmail.com');
+insert into users (username, password, email) values ('user', '$2a$12$woyVf3GRn1wzUJUqbY9Z2uXR5vZWNBHdndRNR4WFUesHZ0TR9zvrS', 'user@gmail.com');
+insert into users (username, password, email) values ('seller', '$2a$12$woyVf3GRn1wzUJUqbY9Z2uXR5vZWNBHdndRNR4WFUesHZ0TR9zvrS', 'seller@gmail.com');
+insert into roles (role_name) values ('ROLE_ADMIN');
+insert into roles (role_name) values ('ROLE_USER');
+insert into roles (role_name) values ('ROLE_SELLER');
+insert into user_roles (user_id, role_id) values (1, 1);
+insert into user_roles (user_id, role_id) values (2, 2);
+insert into user_roles (user_id, role_id) values (3, 3);
