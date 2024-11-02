@@ -6,11 +6,14 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -24,23 +27,30 @@ public class JwtUtils {
     private String jwtSecret;
     @Value("${spring.app.jwtExpirationMs}")
     private int jwtExpirationMs;
+    @Value("${spring.app.jwtAuthCookieName}")
+    private String jwtAuthCookieName;
 
-    public String getJwtSecretFromHeader(HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
-        if (authorization != null && authorization.startsWith("Bearer ")) {
-            return authorization.substring(7);
+    public String getJwtFromCookie(HttpServletRequest request) {
+        Cookie jwtCookie = WebUtils.getCookie(request, jwtAuthCookieName);
+        if (jwtCookie != null ) {
+            return jwtCookie.getValue();
         }
         return null;
     }
 
-    public String generateJwtTokenFromUser(UserDetails userDetails) {
+    public ResponseCookie generateJwtCookie(UserDetails userDetails) {
         final String username = userDetails.getUsername();
-        return Jwts.builder()
+        String jwt = Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())
                 .expiration(new Date(new Date().getTime() + jwtExpirationMs))
                 .signWith(key())
                 .compact();
+        return ResponseCookie.from(jwtAuthCookieName, jwt)
+                .path("/api")
+                .httpOnly(false)
+                .maxAge(24 * 60 * 60)
+                .build();
     }
 
     public String getUsernameFromJwtToken(String token) {

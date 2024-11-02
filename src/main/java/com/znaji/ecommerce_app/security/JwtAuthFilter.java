@@ -43,7 +43,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private String parseJwtToken(HttpServletRequest request) {
-        return jwtUtils.getJwtSecretFromHeader(request);
+        return jwtUtils.getJwtFromCookie(request);
     }
 
 }

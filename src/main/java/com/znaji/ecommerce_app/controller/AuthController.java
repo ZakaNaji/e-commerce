@@ -4,6 +4,9 @@ import com.znaji.ecommerce_app.dto.LoginRequest;
 import com.znaji.ecommerce_app.dto.LoginResponse;
 import com.znaji.ecommerce_app.security.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,11 +47,14 @@ public class AuthController {
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        final String jwt = jwtUtils.generateJwtTokenFromUser(userDetails);
+        final ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
         final List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
-        LoginResponse loginResponse = new LoginResponse(jwt, userDetails.getUsername(), roles);
-        return ResponseEntity.ok(loginResponse);
+        LoginResponse loginResponse = new LoginResponse(userDetails.getUsername(), roles);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body(loginResponse);
     }
 }
