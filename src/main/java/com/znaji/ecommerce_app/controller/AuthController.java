@@ -60,4 +60,12 @@ public class AuthController {
         if (authentication == null) return "No auth user.";
         return authentication.getName();
     }
+
+    @PostMapping("logout")
+    public ResponseEntity<String> logout() {
+        ResponseCookie cookie = jwtUtils.getCleanCookie();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("You have been signed out!!");
+    }
 }
