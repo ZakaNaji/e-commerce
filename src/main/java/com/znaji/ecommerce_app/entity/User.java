@@ -51,6 +51,9 @@ public class User {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             orphanRemoval = true)
     Set<Product> products;
+
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
     /*pls give me sql to add to scmea.sql for user and role entities
     create table users (
     user_id bigint primary key auto_increment,
